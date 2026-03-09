@@ -3,21 +3,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class DataService {
   final firestore = FirebaseFirestore.instance;
-  final user = FirebaseAuth.instance.currentUser;
 
   Future<void> add(String title) async {
-    await firestore.collection('tasks').add({
-      'title': title,
-      'status': false,
-      'userId': user!.uid,
-      'time': FieldValue.serverTimestamp(),
-    });
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await firestore.collection('tasks').add({
+        'title': title,
+        'status': false,
+        'userId': user.uid,
+        'time': FieldValue.serverTimestamp(),
+      });
+    }
   }
 
   Stream<QuerySnapshot> get() {
+    final user = FirebaseAuth.instance.currentUser;
     return firestore
         .collection('tasks')
-        .where('userId', isEqualTo: user!.uid)
+        .where('userId', isEqualTo: user?.uid ?? '')
         .snapshots();
   }
 
