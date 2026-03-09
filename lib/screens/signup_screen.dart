@@ -44,11 +44,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });
 
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      }
+  Navigator.pushReplacementNamed(context, '/home');
+}
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

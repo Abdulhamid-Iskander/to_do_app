@@ -29,11 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      }
+  Navigator.pushReplacementNamed(context, '/home');
+}
     } on FirebaseAuthException catch (e) {
       String message = "An error occurred";
       if (e.code == 'user-not-found') {

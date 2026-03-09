@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/screens/change_password_screen.dart';
 import 'package:to_do_app/screens/home_screen.dart';
 import 'package:to_do_app/screens/login_screen.dart';
 import 'package:to_do_app/screens/signup_screen.dart';
@@ -24,11 +25,12 @@ class TodoApp extends StatelessWidget {
       home: FirebaseAuth.instance.currentUser == null
           ? const LoginScreen()
           : const HomeScreen(),
-      routes: {
-        '/login': (context) => const LoginScreen(),
-        '/signup': (context) => const SignUpScreen(),
-        '/home': (context) => const HomeScreen(),
-      },
+    routes: {
+  '/login': (context) => const LoginScreen(),
+  '/signup': (context) => const SignUpScreen(),
+  '/home': (context) => const HomeScreen(),
+  '/change-password': (context) => const ChangePasswordScreen(),
+},
     );
   }
 }
