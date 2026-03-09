@@ -23,7 +23,9 @@ class TasksCubit extends Cubit<TasksState> {
     imageUrl : imageUrl
     );
   }
-
+void editTask(String id, String title, {String? description, String? deadline, String? imageUrl}) {
+  _service.update(id, title, description: description, deadline: deadline, imageUrl: imageUrl);
+}
   void deleteTask(String id) {
     _service.delete(id);
   }

@@ -17,6 +17,14 @@ class DataService {
       'time': FieldValue.serverTimestamp(),
     });
   }
+  Future<void> update(String id, String title, {String? description, String? deadline, String? imageUrl}) async {
+  await _firestore.collection('tasks').doc(id).update({
+    'title': title,
+    'description': description,
+    'deadline': deadline,
+    'imageUrl': imageUrl,
+  });
+}
 
   Stream<List<TaskModel>> getTasks() {
     final user = FirebaseAuth.instance.currentUser;
