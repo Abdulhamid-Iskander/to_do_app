@@ -9,25 +9,38 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  final pass = TextEditingController();
+  final oldPass = TextEditingController(); 
+  final newPass = TextEditingController();
   final confirm = TextEditingController();
 
   void update() async {
-    if (pass.text != confirm.text) {
+    if (newPass.text != confirm.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("The password does not match")),
+        const SnackBar(content: Text("The passwords do not match")),
       );
       return;
     }
 
     try {
-      await FirebaseAuth.instance.currentUser!.updatePassword(pass.text.trim());
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("The password has been successfully changed.")),
+      final user = FirebaseAuth.instance.currentUser;
+      
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user!.email!,
+        password: oldPass.text,
       );
-    } catch (e) {
+
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPass.text.trim());
+
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        const SnackBar(content: Text("Password changed successfully!")),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
   }
@@ -35,46 +48,33 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+      appBar: AppBar(title: const Text("Change Password")),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            const Text("CHANGE PASSWORD", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 40),
-            TextField(
-              controller: pass,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: "Password",
-                suffixIcon: const Icon(Icons.visibility_off),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: oldPass,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Old Password", border: OutlineInputBorder()),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: confirm,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: "Confirm Password",
-                suffixIcon: const Icon(Icons.visibility_off),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+              const SizedBox(height: 15),
+              TextField(
+                controller: newPass,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "New Password", border: OutlineInputBorder()),
               ),
-            ),
-            const SizedBox(height: 40),
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton(
-                onPressed: update,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                ),
-                child: const Text("CHANGE PASSWORD", style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 15),
+              TextField(
+                controller: confirm,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Confirm New Password", border: OutlineInputBorder()),
               ),
-            ),
-          ],
+              const SizedBox(height: 30),
+              ElevatedButton(onPressed: update, child: const Text("Update Password")),
+            ],
+          ),
         ),
       ),
     );
