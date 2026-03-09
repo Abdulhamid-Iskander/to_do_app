@@ -1,29 +1,59 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../task_cubit/task_cubit.dart';
+import '../task_cubit/task_state.dart';
+import 'task_item_card.dart';
 
-import 'task_list_view.dart';
-
-/// Handles Firestore stream and provides real-time task updates.
 class TasksStreamView extends StatelessWidget {
-  final String? userId;
-
-  const TasksStreamView({super.key, required this.userId});
+  const TasksStreamView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('tasks')
-          .where('userId', isEqualTo: userId)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+    return BlocBuilder<TasksCubit, TasksState>(
+      builder: (context, state) {
+        if (state is TasksLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFFE91E63)),
+          );
         }
 
-        final docs = snapshot.data?.docs ?? [];
+        if (state is TasksError) {
+          return Center(
+            child: Text(
+              "Error: ${state.message}",
+              style: const TextStyle(color: Colors.redAccent),
+            ),
+          );
+        }
 
-        return TaskListView(documents: docs);
+        if (state is TasksLoaded) {
+          final tasks = state.tasks;
+          
+          if (tasks.isEmpty) {
+            return const Center(
+              child: Text(
+                "No tasks found. Start adding now!",
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(20),
+            physics: const BouncingScrollPhysics(),
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              return TaskItemCard(
+                task: tasks[index],
+                index: index,
+              );
+            },
+          );
+        }
+
+        return const Center(
+          child: Text("Waiting for tasks..."),
+        );
       },
     );
   }

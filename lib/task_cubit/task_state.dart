@@ -1,6 +1,19 @@
-part of 'task_cubit.dart';
+import 'package:to_do_app/models/task_model.dart';
 
-@immutable
-sealed class TaskState {}
+abstract class TasksState {}
 
-final class TaskInitial extends TaskState {}
+class TasksInitial extends TasksState {}
+
+class TasksLoading extends TasksState {}
+
+class TasksLoaded extends TasksState {
+  final List<TaskModel> tasks;
+
+  TasksLoaded(this.tasks);
+}
+
+class TasksError extends TasksState {
+  final String message;
+
+  TasksError(this.message);
+}
