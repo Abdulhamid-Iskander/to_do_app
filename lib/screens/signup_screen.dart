@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:to_do_app/screens/home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -15,6 +14,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final email = TextEditingController();
   final pass = TextEditingController();
   final confirm = TextEditingController();
+  bool isLoading = false;
 
   void register() async {
     if (email.text.isEmpty || pass.text.isEmpty || name.text.isEmpty) {
@@ -31,6 +31,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email.text.trim(),
@@ -44,8 +48,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });
 
       if (mounted) {
-  Navigator.pushReplacementNamed(context, '/home');
-}
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -58,8 +62,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           SnackBar(content: Text(e.toString())),
         );
       }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,12 +122,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: register,
+                  onPressed: isLoading ? null : register,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pink,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
-                  child: const Text("Sign Up", style: TextStyle(color: Colors.white)),
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text("Sign Up", style: TextStyle(color: Colors.white)),
                 ),
               ),
               TextButton(

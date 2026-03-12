@@ -9,9 +9,10 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  final oldPass = TextEditingController(); 
+  final oldPass = TextEditingController();
   final newPass = TextEditingController();
   final confirm = TextEditingController();
+  bool isLoading = false;
 
   void update() async {
     if (newPass.text != confirm.text) {
@@ -20,6 +21,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       );
       return;
     }
+
+    setState(() {
+      isLoading = true;
+    });
 
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -42,6 +47,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -72,7 +83,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 decoration: const InputDecoration(labelText: "Confirm New Password", border: OutlineInputBorder()),
               ),
               const SizedBox(height: 30),
-              ElevatedButton(onPressed: update, child: const Text("Update Password")),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: isLoading ? null : update,
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text("Update Password"),
+                ),
+              ),
             ],
           ),
         ),

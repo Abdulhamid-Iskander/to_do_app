@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:to_do_app/screens/home_screen.dart';
 import 'package:to_do_app/screens/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final email = TextEditingController();
   final pass = TextEditingController();
+  bool isLoading = false;
 
   void login() async {
     if (email.text.isEmpty || pass.text.isEmpty) {
@@ -22,6 +22,10 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email.text.trim(),
@@ -29,8 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (mounted) {
-  Navigator.pushReplacementNamed(context, '/home');
-}
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     } on FirebaseAuthException catch (e) {
       String message = "An error occurred";
       if (e.code == 'user-not-found') {
@@ -39,13 +43,23 @@ class _LoginScreenState extends State<LoginScreen> {
         message = "Wrong password provided.";
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -87,12 +101,14 @@ class _LoginScreenState extends State<LoginScreen> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: login,
+                onPressed: isLoading ? null : login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 ),
-                child: const Text("Sign In", style: TextStyle(color: Colors.white)),
+                child: isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text("Sign In", style: TextStyle(color: Colors.white)),
               ),
             ),
             TextButton(

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/task_model.dart';
 import '../screens/task_details_screen.dart';
@@ -64,6 +65,13 @@ class TaskItemCard extends StatelessWidget {
                 ],
               ),
             ),
+            if (task.imageUrl != null && task.imageUrl!.isNotEmpty)
+              Image.file(
+                File(task.imageUrl!),
+                height: 160,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(

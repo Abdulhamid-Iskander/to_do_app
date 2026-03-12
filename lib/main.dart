@@ -14,7 +14,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     BlocProvider(
-      create: (context) => TasksCubit()..fetchTasks(),
+      create: (context) => TasksCubit(),
       child: const TodoApp(),
     ),
   );

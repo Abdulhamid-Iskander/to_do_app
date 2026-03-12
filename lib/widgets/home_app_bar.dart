@@ -13,7 +13,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: const Padding(
         padding: EdgeInsets.all(8.0),
         child: Image(
-          image: AssetImage('assets/logo.png'),
+          image: AssetImage('assets/images/logo.png'),
         ),
       ),
       actions: [
