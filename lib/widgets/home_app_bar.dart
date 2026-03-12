@@ -18,13 +18,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          icon: const Icon(
-            Icons.person_outline,
-            color: Colors.blueGrey,
-            size: 30,
-          ),
-          onPressed: () {},
-        ),
+  icon: const Icon(Icons.person_outline),
+  onPressed: () {
+    Navigator.pushNamed(context, '/profile');
+  },
+)
       ],
     );
   }

@@ -7,6 +7,7 @@ import 'package:to_do_app/screens/home_screen.dart';
 import 'package:to_do_app/screens/login_screen.dart';
 import 'package:to_do_app/screens/signup_screen.dart';
 import 'package:to_do_app/task_cubit/task_cubit.dart';
+import 'screens/profile_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -31,11 +32,12 @@ class TodoApp extends StatelessWidget {
           ? const LoginScreen()
           : const HomeScreen(),
       routes: {
-        '/login': (context) => const LoginScreen(),
-        '/signup': (context) => const SignUpScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/change-password': (context) => const ChangePasswordScreen(),
-      },
+  '/login': (context) => const LoginScreen(),
+  '/signup': (context) => const SignUpScreen(),
+  '/home': (context) => const HomeScreen(),
+  '/change-password': (context) => const ChangePasswordScreen(),
+  '/profile': (context) => const ProfileScreen(),
+},
     );
   }
 }
