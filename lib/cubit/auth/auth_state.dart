@@ -5,7 +5,7 @@ class AuthState {
 
   AuthState({
     this.name = 'User Name', 
-    this.email = 'user@example.com',
+    this.email = 'Email',
     this.language = 'English',
   });
 

@@ -2,27 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/cubit/auth/auth_cubit.dart';
 import 'package:to_do_app/cubit/auth/auth_state.dart';
-
+import 'package:to_do_app/words/app_words.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  void edit(BuildContext context, String title) {
+  void edit(BuildContext context, String title, String lang) {
     final input = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Edit $title'),
+          title: Text(AppWords.tr('Edit $title', lang)),
           content: TextField(
             controller: input,
             decoration: InputDecoration(
-              hintText: 'Enter new $title',
+              hintText: AppWords.tr('Enter new $title', lang),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+              child: Text(AppWords.tr('Cancel', lang), style: const TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -38,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Save', style: TextStyle(color: Colors.white)),
+              child: Text(AppWords.tr('Save', lang), style: const TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -46,24 +46,24 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void lang(BuildContext context) {
+  void langDialog(BuildContext context, String lang) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Language'),
+          title: Text(AppWords.tr('Language', lang)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('English'),
+                title: Text(AppWords.tr('English', lang)),
                 onTap: () {
                   context.read<AuthCubit>().updateLanguage('English');
                   Navigator.pop(context);
                 },
               ),
               ListTile(
-                title: const Text('Arabic'),
+                title: Text(AppWords.tr('Arabic', lang)),
                 onTap: () {
                   context.read<AuthCubit>().updateLanguage('Arabic');
                   Navigator.pop(context);
@@ -80,6 +80,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
+        final lang = state.language;
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -102,28 +103,28 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   item(
                     title: state.name, 
-                    tap: () => edit(context, 'Name'),
+                    tap: () => edit(context, 'Name', lang),
                   ),
                   item(
                     title: state.email, 
-                    tap: () => edit(context, 'Email'),
+                    tap: () => edit(context, 'Email', lang),
                   ),
                   item(
-                    title: 'Change Password',
+                    title: AppWords.tr('Change Password', lang),
                     tap: () {
                       Navigator.pushNamed(context, '/change-password');
                     },
                   ),
                   item(
-                    title: 'Language: ${state.language}', 
-                    tap: () => lang(context),
+                    title: "${AppWords.tr('Language', lang)}: ${AppWords.tr(state.language, lang)}", 
+                    tap: () => langDialog(context, lang),
                   ),
                   const SizedBox(height: 10),
                   ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                    title: const Text(
-                      'Log Out',
-                      style: TextStyle(
+                    title: Text(
+                      AppWords.tr('Log Out', lang),
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFFE91E63),

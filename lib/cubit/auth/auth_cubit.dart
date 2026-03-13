@@ -11,7 +11,7 @@ class AuthCubit extends Cubit<AuthState> {
     final prefs = await SharedPreferences.getInstance();
     emit(state.copyWith(
       name: prefs.getString('name') ?? 'User Name',
-      email: prefs.getString('email') ?? 'user@example.com',
+      email: prefs.getString('email') ?? 'Email',
       language: prefs.getString('language') ?? 'English',
     ));
   }

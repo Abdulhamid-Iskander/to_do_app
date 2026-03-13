@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/cubit/auth/auth_cubit.dart';
+import 'package:to_do_app/words/app_words.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -14,9 +17,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool isLoading = false;
 
   Future<void> updatePassword() async {
+    final lang = context.read<AuthCubit>().state.language;
+
     if (currentPassword.text.isEmpty || newPassword.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+        SnackBar(content: Text(AppWords.tr('Please fill all fields', lang))),
       );
       return;
     }
@@ -39,8 +44,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Password updated successfully!'),
+            SnackBar(
+              content: Text(AppWords.tr('Password updated successfully!', lang)),
               backgroundColor: Colors.green,
             ),
           );
@@ -48,11 +53,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         }
       }
     } on FirebaseAuthException catch (e) {
-      String message = 'An error occurred';
+      String message = AppWords.tr('An error occurred', lang);
       if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
-        message = 'Current password is incorrect';
+        message = AppWords.tr('Current password is incorrect', lang);
       } else if (e.code == 'weak-password') {
-        message = 'The new password is too weak';
+        message = AppWords.tr('The new password is too weak', lang);
       }
       
       if (mounted) {
@@ -78,6 +83,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = context.watch<AuthCubit>().state.language;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -87,7 +94,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Change Password', style: TextStyle(color: Colors.black)),
+        title: Text(AppWords.tr('Change Password', lang), style: const TextStyle(color: Colors.black)),
         centerTitle: true,
       ),
       body: Padding(
@@ -98,7 +105,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               controller: currentPassword,
               obscureText: true,
               decoration: InputDecoration(
-                hintText: 'Current Password',
+                hintText: AppWords.tr('Current Password', lang),
                 filled: true,
                 fillColor: Colors.grey[100],
                 border: OutlineInputBorder(
@@ -112,7 +119,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               controller: newPassword,
               obscureText: true,
               decoration: InputDecoration(
-                hintText: 'New Password',
+                hintText: AppWords.tr('New Password', lang),
                 filled: true,
                 fillColor: Colors.grey[100],
                 border: OutlineInputBorder(
@@ -134,9 +141,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 onPressed: isLoading ? null : updatePassword,
                 child: isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        'Update Password', 
-                        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)
+                    : Text(
+                        AppWords.tr('Update Password', lang), 
+                        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)
                       ),
               ),
             ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/words/app_words.dart';
 import '../models/task_model.dart';
 import '../widgets/edit_task_view.dart';
 import '../widgets/delete_bottom_sheet.dart';
+import 'package:to_do_app/cubit/auth/auth_cubit.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
   final TaskModel task;
@@ -9,6 +12,8 @@ class TaskDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = context.watch<AuthCubit>().state.language;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -50,13 +55,13 @@ class TaskDetailsScreen extends StatelessWidget {
             Text(task.title, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
             const SizedBox(height: 25),
             Text(
-              task.description ?? 'No description provided.',
+              task.description ?? AppWords.tr('No description provided.', lang),
               style: const TextStyle(fontSize: 18, color: Colors.black54, height: 1.6),
             ),
             const Spacer(),
             Center(
               child: Text(
-                "Created at ${task.deadline ?? 'N/A'}",
+                "${AppWords.tr('Created at ', lang)}${task.deadline ?? AppWords.tr('N/A', lang)}",
                 style: const TextStyle(color: Colors.grey, fontSize: 14),
               ),
             ),
