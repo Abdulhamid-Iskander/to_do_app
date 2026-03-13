@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/task_cubit/task_cubit.dart';
-import '../cubit/task_cubit/task_state.dart';
-import 'task_item_card.dart';
+import '../../cubit/task_cubit/task_cubit.dart';
+import '../../cubit/task_cubit/task_state.dart';
+import '../tasks/task_item_card.dart';
+import 'package:to_do_app/cubit/auth/auth_cubit.dart';
+import 'package:to_do_app/core/app_words.dart';
 
 class TasksStreamView extends StatelessWidget {
   const TasksStreamView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
+    final lang = context.watch<AuthCubit>().state.language;
+
     return BlocBuilder<TasksCubit, TasksState>(
       builder: (context, state) {
         if (state is TasksLoading) {
-          return const Center(
-            child: CircularProgressIndicator(color: Color(0xFFE91E63)),
+          return Center(
+            child: CircularProgressIndicator(color: primaryColor),
           );
         }
 
         if (state is TasksError) {
           return Center(
             child: Text(
-              "Error: ${state.message}",
+              "${AppWords.tr('Error', lang)}: ${state.message}",
               style: const TextStyle(color: Colors.redAccent),
             ),
           );
@@ -30,10 +35,10 @@ class TasksStreamView extends StatelessWidget {
           final tasks = state.tasks;
           
           if (tasks.isEmpty) {
-            return const Center(
+            return Center(
               child: Text(
-                "No tasks found. Start adding now!",
-                style: TextStyle(color: Colors.grey, fontSize: 16),
+                AppWords.tr("No tasks found. Start adding now!", lang),
+                style: const TextStyle(color: Colors.grey, fontSize: 16),
               ),
             );
           }
@@ -51,8 +56,8 @@ class TasksStreamView extends StatelessWidget {
           );
         }
 
-        return const Center(
-          child: Text("Waiting for tasks..."),
+        return Center(
+          child: Text(AppWords.tr("Waiting for tasks...", lang)),
         );
       },
     );

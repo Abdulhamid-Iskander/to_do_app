@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_app/words/app_words.dart';
-import '../models/task_model.dart';
-import '../screens/task_details_screen.dart';
+import 'package:to_do_app/core/app_words.dart';
+import '../../models/task_model.dart';
+import '../../screens/main/task_details_screen.dart';
 import 'package:to_do_app/cubit/auth/auth_cubit.dart';
 
 class TaskItemCard extends StatelessWidget {
@@ -15,6 +15,8 @@ class TaskItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<AuthCubit>().state.language;
+    final primaryColor = Theme.of(context).primaryColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return InkWell(
       onTap: () => Navigator.push(
@@ -24,11 +26,11 @@ class TaskItemCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFE91E63).withOpacity(0.15), 
+              color: primaryColor.withOpacity(0.15), 
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -38,9 +40,9 @@ class TaskItemCard extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              decoration: const BoxDecoration(
-                color: Color(0xFFE91E63), 
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: primaryColor, 
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25),
                 ),
@@ -62,7 +64,7 @@ class TaskItemCard extends StatelessWidget {
                       AppWords.tr(task.status ? "Completed" : "Pending", lang),
                       style: TextStyle(
                         fontSize: 12,
-                        color: task.status ? Colors.green : const Color(0xFFE91E63), 
+                        color: task.status ? Colors.green : primaryColor, 
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -70,7 +72,6 @@ class TaskItemCard extends StatelessWidget {
                 ],
               ),
             ),
-            
             if (task.imageUrl != null && task.imageUrl!.isNotEmpty)
               Image.file(
                 File(task.imageUrl!),
@@ -78,7 +79,6 @@ class TaskItemCard extends StatelessWidget {
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
-              
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(
@@ -93,7 +93,9 @@ class TaskItemCard extends StatelessWidget {
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             decoration: task.status ? TextDecoration.lineThrough : null,
-                            color: task.status ? Colors.grey : Colors.black87,
+                            color: task.status 
+                                ? Colors.grey 
+                                : (isDark ? Colors.white : Colors.black87),
                           ),
                         ),
                         if (task.deadline != null)
@@ -110,7 +112,7 @@ class TaskItemCard extends StatelessWidget {
                   Icon(
                     lang == 'Arabic' ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
                     size: 16, 
-                    color: const Color(0xFFE91E63)
+                    color: primaryColor
                   ),
                 ],
               ),

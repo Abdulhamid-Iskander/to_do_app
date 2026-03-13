@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:to_do_app/cubit/task_cubit/task_cubit.dart';
-import 'package:to_do_app/widgets/custom_add_task_field.dart';
+import 'package:to_do_app/widgets/tasks/custom_add_task_field.dart';
 import 'package:to_do_app/cubit/auth/auth_cubit.dart';
-import 'package:to_do_app/words/app_words.dart';
+import 'package:to_do_app/core/app_words.dart';
 
 class AddTaskView extends StatefulWidget {
   const AddTaskView({super.key});
@@ -46,13 +46,14 @@ class _AddTaskViewState extends State<AddTaskView> {
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<AuthCubit>().state.language;
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.pink[300],
+            color: primaryColor,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
@@ -130,8 +131,8 @@ class _AddTaskViewState extends State<AddTaskView> {
                     ),
                     child: Text(
                       AppWords.tr("Save", lang),
-                      style: const TextStyle(
-                        color: Color(0xFFE91E63),
+                      style: TextStyle(
+                        color: primaryColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

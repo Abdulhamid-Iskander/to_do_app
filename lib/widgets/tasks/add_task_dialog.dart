@@ -6,7 +6,7 @@ class AddTaskDialog {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isScrollControlled: true, 
+      isScrollControlled: true,
       builder: (context) {
         return const AddTaskView();
       },

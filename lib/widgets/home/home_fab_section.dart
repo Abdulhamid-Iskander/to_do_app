@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/widgets/add_task_fab_button.dart';
-import 'package:to_do_app/widgets/theme_fab_button.dart';
+import 'package:to_do_app/widgets/tasks/add_task_fab_button.dart';
+import 'package:to_do_app/widgets/home/theme_fab_button.dart';
 
 class HomeFabSection extends StatelessWidget {
   const HomeFabSection({super.key});

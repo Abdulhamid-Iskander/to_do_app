@@ -118,4 +118,29 @@ class AuthCubit extends Cubit<AuthState> {
       isDarkMode: currentMode,
     )); 
   }
+  Future<void> changeUserPassword(String currentPassword, String newPassword) async {
+    emit(state.copyWith(isLoading: true, authError: null, isSuccess: false));
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null && user.email != null) {
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: currentPassword,
+        );
+        await user.reauthenticateWithCredential(credential);
+        await user.updatePassword(newPassword);
+        emit(state.copyWith(isLoading: false, isSuccess: true));
+      }
+    } on FirebaseAuthException catch (e) {
+      String message = "An error occurred";
+      if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
+        message = "Current password is incorrect";
+      } else if (e.code == 'weak-password') {
+        message = "The new password is too weak";
+      }
+      emit(state.copyWith(isLoading: false, authError: message));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, authError: e.toString()));
+    }
+  }
 }

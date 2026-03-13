@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_app/words/app_words.dart';
-import '../models/task_model.dart';
-import '../widgets/edit_task_view.dart';
-import '../widgets/delete_bottom_sheet.dart';
+import 'package:to_do_app/models/task_model.dart';
+import 'package:to_do_app/widgets/tasks/delete_bottom_sheet.dart';
+import 'package:to_do_app/widgets/tasks/edit_task_view.dart';
+import 'package:to_do_app/core/app_words.dart';
+
 import 'package:to_do_app/cubit/auth/auth_cubit.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
@@ -13,23 +14,24 @@ class TaskDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<AuthCubit>().state.language;
+    final iconColor = Theme.of(context).iconTheme.color;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios, color: iconColor),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_outlined, color: Colors.black),
+            icon: Icon(Icons.edit_outlined, color: iconColor),
             onPressed: () => EditTaskDialog.show(context, task),
           ),
           IconButton(
-            icon: const Icon(Icons.delete_outline, color: Colors.black),
+            icon: Icon(Icons.delete_outline, color: iconColor),
             onPressed: () => DeleteBottomSheet.show(context, task.id),
           ),
         ],
@@ -52,11 +54,11 @@ class TaskDetailsScreen extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 20),
-            Text(task.title, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            Text(task.title, style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: textColor)),
             const SizedBox(height: 25),
             Text(
               task.description ?? AppWords.tr('No description provided.', lang),
-              style: const TextStyle(fontSize: 18, color: Colors.black54, height: 1.6),
+              style: const TextStyle(fontSize: 18, color: Colors.grey, height: 1.6),
             ),
             const Spacer(),
             Center(

@@ -22,11 +22,19 @@ class CustomAddTaskField extends StatelessWidget {
       style: const TextStyle(color: Colors.white), 
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)), 
+        hintStyle: TextStyle(color: Colors.white.withOpacity(0.8)), 
         filled: true,
-        fillColor: Colors.pink[100]?.withOpacity(0.5),
+        fillColor: Colors.white.withOpacity(0.2),
         suffixIcon: suffixIcon != null ? Icon(suffixIcon, color: Colors.white) : null,
         border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Colors.white, width: 2), 
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Colors.white70, width: 1), 
+        ),
+        focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: const BorderSide(color: Colors.white, width: 2), 
         ),

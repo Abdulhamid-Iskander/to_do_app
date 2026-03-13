@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/cubit/auth/auth_cubit.dart';
 import 'package:to_do_app/cubit/auth/auth_state.dart';
-import 'package:to_do_app/words/app_words.dart';
+import 'package:to_do_app/core/app_words.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE91E63),
+                backgroundColor: Theme.of(context).primaryColor,
               ),
               onPressed: () {
                 if (input.text.isNotEmpty) {
@@ -82,13 +82,14 @@ class ProfileScreen extends StatelessWidget {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
         final lang = state.language;
+        final textColor = Theme.of(context).textTheme.bodyLarge?.color;
+
         return Scaffold(
-          backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+              icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -102,24 +103,24 @@ class ProfileScreen extends StatelessWidget {
                     height: 250,
                   ),
                   const SizedBox(height: 30),
-                  item(
+                  ProfileItemWidget(
                     title: AppWords.tr(state.name, lang),
                     tap: () => edit(context, 'Name', lang),
                     lang: lang,
                   ),
-                  item(
+                  ProfileItemWidget(
                     title: AppWords.tr(state.email, lang),
                     tap: () => edit(context, 'Email', lang),
                     lang: lang,
                   ),
-                  item(
+                  ProfileItemWidget(
                     title: AppWords.tr('Change Password', lang),
                     tap: () {
                       Navigator.pushNamed(context, '/change-password');
                     },
                     lang: lang,
                   ),
-                  item(
+                  ProfileItemWidget(
                     title: "${AppWords.tr('Language', lang)}: ${AppWords.tr(state.language, lang)}",
                     tap: () => langDialog(context, lang),
                     lang: lang,
@@ -132,7 +133,7 @@ class ProfileScreen extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFFE91E63),
+                        color: Colors.redAccent,
                       ),
                     ),
                     onTap: () {
@@ -152,22 +153,36 @@ class ProfileScreen extends StatelessWidget {
       },
     );
   }
+}
 
-  Widget item({required String title, required VoidCallback tap, required String lang}) {
+class ProfileItemWidget extends StatelessWidget {
+  final String title;
+  final VoidCallback tap;
+  final String lang;
+
+  const ProfileItemWidget({
+    super.key,
+    required this.title,
+    required this.tap,
+    required this.lang,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 18,
-          color: Colors.black87,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
           fontWeight: FontWeight.w500,
         ),
       ),
       trailing: Icon(
         lang == 'Arabic' ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
         size: 18,
-        color: Colors.black87,
+        color: Theme.of(context).iconTheme.color,
       ),
       onTap: tap,
     );
