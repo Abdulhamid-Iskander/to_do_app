@@ -54,10 +54,16 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(isLoading: true, authError: null, isSuccess: false));
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
+      
+      final doc = await FirebaseFirestore.instance.collection('users').doc(cred.user!.uid).get();
+      if (doc.exists) {
+        await updateName(doc.data()?['name'] ?? 'User Name');
+      }
+      await updateEmail(email.trim());
       
       emit(state.copyWith(isLoading: false, isSuccess: true));
     } on FirebaseAuthException catch (e) {

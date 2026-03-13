@@ -12,6 +12,11 @@ class TaskItemCard extends StatelessWidget {
 
   const TaskItemCard({super.key, required this.task, required this.index});
 
+  String formatArabicTime(String? time, String lang) {
+    if (time == null) return '';
+    return time.replaceAll('AM', AppWords.tr('AM', lang)).replaceAll('PM', AppWords.tr('PM', lang));
+  }
+
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<AuthCubit>().state.language;
@@ -73,12 +78,28 @@ class TaskItemCard extends StatelessWidget {
               ),
             ),
             if (task.imageUrl != null && task.imageUrl!.isNotEmpty)
-              Image.file(
-                File(task.imageUrl!),
-                height: 160,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+              task.imageUrl!.startsWith('http')
+                  ? Image.network(
+                      task.imageUrl!,
+                      height: 160,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return SizedBox(
+                          height: 160,
+                          child: Center(
+                            child: CircularProgressIndicator(color: primaryColor),
+                          ),
+                        );
+                      },
+                    )
+                  : Image.file(
+                      File(task.imageUrl!),
+                      height: 160,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(
@@ -98,12 +119,20 @@ class TaskItemCard extends StatelessWidget {
                                 : (isDark ? Colors.white : Colors.black87),
                           ),
                         ),
-                        if (task.deadline != null)
+                        if (task.createdAt != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: Text(
-                              "${AppWords.tr('Created at ', lang)}${task.deadline}",
+                              "${AppWords.tr('Created at ', lang)}${formatArabicTime(task.createdAt, lang)}",
                               style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                          ),
+                        if (task.deadline != null && task.deadline!.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              "${AppWords.tr('Deadline', lang)}: ${formatArabicTime(task.deadline, lang)}",
+                              style: const TextStyle(fontSize: 12, color: Colors.redAccent, fontWeight: FontWeight.w600),
                             ),
                           ),
                       ],

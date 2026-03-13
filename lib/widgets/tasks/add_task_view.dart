@@ -30,16 +30,35 @@ class _AddTaskViewState extends State<AddTaskView> {
   }
 
   Future<void> select(BuildContext context) async {
-    final picked = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-    if (picked != null) {
-      setState(() {
-        deadline.text = picked.toString().split(' ')[0];
-      });
+
+    if (pickedDate != null) {
+      final pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          final y = pickedDate.year;
+          final m = pickedDate.month.toString().padLeft(2, '0');
+          final d = pickedDate.day.toString().padLeft(2, '0');
+          
+          int hour = pickedTime.hour;
+          String period = hour >= 12 ? 'PM' : 'AM';
+          int h12 = hour % 12;
+          if (h12 == 0) h12 = 12;
+          final h = h12.toString().padLeft(2, '0');
+          final min = pickedTime.minute.toString().padLeft(2, '0');
+          
+          deadline.text = "$y-$m-$d $h:$min $period";
+        });
+      }
     }
   }
 
