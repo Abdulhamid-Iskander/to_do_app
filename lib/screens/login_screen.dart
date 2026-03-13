@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/cubit/auth/auth_cubit.dart';
 import 'package:to_do_app/screens/signup_screen.dart';
+import 'package:to_do_app/words/app_words.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,9 +18,11 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
 
   void login() async {
+    final lang = context.read<AuthCubit>().state.language;
+
     if (email.text.isEmpty || pass.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill all fields")),
+        SnackBar(content: Text(AppWords.tr("Please fill all fields", lang))),
       );
       return;
     }
@@ -36,11 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacementNamed(context, '/home');
       }
     } on FirebaseAuthException catch (e) {
-      String message = "An error occurred";
+      String message = AppWords.tr("An error occurred", lang);
       if (e.code == 'user-not-found') {
-        message = "No user found for that email.";
+        message = AppWords.tr("No user found for that email.", lang);
       } else if (e.code == 'wrong-password') {
-        message = "Wrong password provided.";
+        message = AppWords.tr("Wrong password provided.", lang);
       }
 
       if (mounted) {
@@ -65,18 +70,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = context.watch<AuthCubit>().state.language;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("Sign In", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            Text(AppWords.tr("Sign In", lang), style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
             const SizedBox(height: 30),
             TextField(
               controller: email,
               decoration: InputDecoration(
-                labelText: "Email",
+                labelText: AppWords.tr("Email", lang),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
               ),
             ),
@@ -85,15 +92,14 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: pass,
               obscureText: true,
               decoration: InputDecoration(
-                labelText: "Password",
+                labelText: AppWords.tr("Password", lang),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
               ),
             ),
             Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
+alignment: lang == 'Arabic' ? Alignment.centerLeft : Alignment.centerRight,              child: TextButton(
                 onPressed: () {},
-                child: const Text("Forgot Password?", style: TextStyle(color: Colors.pink)),
+                child: Text(AppWords.tr("Forgot Password?", lang), style: const TextStyle(color: Colors.pink)),
               ),
             ),
             const SizedBox(height: 20),
@@ -108,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text("Sign In", style: TextStyle(color: Colors.white)),
+                    : Text(AppWords.tr("Sign In", lang), style: const TextStyle(color: Colors.white)),
               ),
             ),
             TextButton(
@@ -118,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   MaterialPageRoute(builder: (context) => const SignUpScreen()),
                 );
               },
-              child: const Text("Don't have an account? Sign up", style: TextStyle(color: Colors.black54)),
+              child: Text(AppWords.tr("Don't have an account? Sign up", lang), style: const TextStyle(color: Colors.black54)),
             ),
           ],
         ),

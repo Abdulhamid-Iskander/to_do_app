@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:to_do_app/cubit/task_cubit/task_cubit.dart';
 import 'package:to_do_app/widgets/custom_add_task_field.dart';
+import 'package:to_do_app/cubit/auth/auth_cubit.dart';
+import 'package:to_do_app/words/app_words.dart';
 
 class AddTaskView extends StatefulWidget {
   const AddTaskView({super.key});
@@ -44,6 +46,8 @@ class _AddTaskViewState extends State<AddTaskView> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = context.watch<AuthCubit>().state.language;
+
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SafeArea(
@@ -72,12 +76,12 @@ class _AddTaskViewState extends State<AddTaskView> {
                 const SizedBox(height: 25),
                 CustomAddTaskField(
                   controller: title,
-                  hintText: "Title",
+                  hintText: AppWords.tr("Title", lang),
                 ),
                 const SizedBox(height: 15),
                 CustomAddTaskField(
                   controller: desc,
-                  hintText: "Description",
+                  hintText: AppWords.tr("Description", lang),
                   maxLines: 8,
                 ),
                 const SizedBox(height: 15),
@@ -86,7 +90,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                   child: AbsorbPointer(
                     child: CustomAddTaskField(
                       controller: deadline,
-                      hintText: "Deadline",
+                      hintText: AppWords.tr("Deadline", lang),
                       suffixIcon: Icons.calendar_today_outlined,
                     ),
                   ),
@@ -97,7 +101,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                   child: AbsorbPointer(
                     child: CustomAddTaskField(
                       controller: image,
-                      hintText: "Image",
+                      hintText: AppWords.tr("Image", lang),
                       suffixIcon: Icons.image_outlined,
                     ),
                   ),
@@ -125,9 +129,9 @@ class _AddTaskViewState extends State<AddTaskView> {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(
+                    child: Text(
+                      AppWords.tr("Save", lang),
+                      style: const TextStyle(
                         color: Color(0xFFE91E63),
                         fontWeight: FontWeight.bold,
                       ),

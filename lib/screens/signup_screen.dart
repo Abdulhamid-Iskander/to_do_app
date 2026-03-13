@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/cubit/auth/auth_cubit.dart';
+import 'package:to_do_app/words/app_words.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -17,16 +20,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isLoading = false;
 
   void register() async {
+    final lang = context.read<AuthCubit>().state.language;
+
     if (email.text.isEmpty || pass.text.isEmpty || name.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("All fields are required")),
+        SnackBar(content: Text(AppWords.tr("All fields are required", lang))),
       );
       return;
     }
 
     if (pass.text != confirm.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("The password does not match")),
+        SnackBar(content: Text(AppWords.tr("The password does not match", lang))),
       );
       return;
     }
@@ -53,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? "An error occurred")),
+          SnackBar(content: Text(e.message ?? AppWords.tr("An error occurred", lang))),
         );
       }
     } catch (e) {
@@ -73,6 +78,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = context.watch<AuthCubit>().state.language;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -80,12 +87,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             children: [
               const SizedBox(height: 50),
-              const Text("Sign Up", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+              Text(AppWords.tr("Sign Up", lang), style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
               const SizedBox(height: 30),
               TextField(
                 controller: name,
                 decoration: InputDecoration(
-                  labelText: "Full Name",
+                  labelText: AppWords.tr("Full Name", lang),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                 ),
               ),
@@ -93,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               TextField(
                 controller: email,
                 decoration: InputDecoration(
-                  labelText: "Email",
+                  labelText: AppWords.tr("Email", lang),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                 ),
               ),
@@ -102,7 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 controller: pass,
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: "Password",
+                  labelText: AppWords.tr("Password", lang),
                   suffixIcon: const Icon(Icons.visibility_off),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                 ),
@@ -112,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 controller: confirm,
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: "Confirm Password",
+                  labelText: AppWords.tr("Confirm Password", lang),
                   suffixIcon: const Icon(Icons.visibility_off),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                 ),
@@ -129,12 +136,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text("Sign Up", style: TextStyle(color: Colors.white)),
+                      : Text(AppWords.tr("Sign Up", lang), style: const TextStyle(color: Colors.white)),
                 ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text("Have an account? Sign in", style: TextStyle(color: Colors.black54)),
+                child: Text(AppWords.tr("Have an account? Sign in", lang), style: const TextStyle(color: Colors.black54)),
               ),
             ],
           ),
