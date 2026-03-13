@@ -14,6 +14,7 @@ class AuthCubit extends Cubit<AuthState> {
       name: prefs.getString('name') ?? 'User Name',
       email: prefs.getString('email') ?? 'Email',
       language: prefs.getString('language') ?? 'English',
+      themeColor: prefs.getInt('themeColor') ?? 0xFFE91E63,
     ));
   }
 
@@ -35,16 +36,23 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(language: newLanguage));
   }
 
+  Future<void> updateThemeColor(int newColor) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('themeColor', newColor);
+    emit(state.copyWith(themeColor: newColor));
+  }
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
-    
     final currentLanguage = state.language; 
+    final currentColor = state.themeColor;
     
     await prefs.clear(); 
     await FirebaseAuth.instance.signOut();
     
     await prefs.setString('language', currentLanguage);
+    await prefs.setInt('themeColor', currentColor);
     
-    emit(AuthState(language: currentLanguage)); 
+    emit(AuthState(language: currentLanguage, themeColor: currentColor)); 
   }
 }
