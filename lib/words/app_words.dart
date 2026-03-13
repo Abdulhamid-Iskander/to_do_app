@@ -45,6 +45,12 @@ class AppWords {
       'Deadline (Optional)': 'Deadline (Optional)',
       'Add Image (Optional)': 'Add Image (Optional)',
       'ADD TODO': 'ADD TODO',
+      'User Name': 'User Name',
+      'user@example.com': 'user@example.com',
+      'Pending': 'Pending',
+      'Completed': 'Completed',
+      'Deadline': 'Deadline',
+      'Image': 'Image',
     },
     'Arabic': {
       'Profile': 'الصفحة الشخصية',
@@ -91,6 +97,12 @@ class AppWords {
       'Deadline (Optional)': 'تاريخ الانتهاء (اختياري)',
       'Add Image (Optional)': 'إضافة صورة (اختياري)',
       'ADD TODO': 'إضافة المهمة',
+      'User Name': 'اسم المستخدم',
+      'user@example.com': 'البريد الإلكتروني',
+      'Pending': 'قيد الانتظار',
+      'Completed': 'مكتمل',
+      'Deadline': 'تاريخ الانتهاء',
+      'Image': 'الصورة',
     }
   };
 

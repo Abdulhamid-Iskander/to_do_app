@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/words/app_words.dart';
 import '../models/task_model.dart';
 import '../screens/task_details_screen.dart';
+import 'package:to_do_app/cubit/auth/auth_cubit.dart';
 
 class TaskItemCard extends StatelessWidget {
   final TaskModel task;
@@ -11,6 +14,8 @@ class TaskItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = context.watch<AuthCubit>().state.language;
+
     return InkWell(
       onTap: () => Navigator.push(
         context,
@@ -54,7 +59,7 @@ class TaskItemCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      task.status ? "Completed" : "Pending",
+                      AppWords.tr(task.status ? "Completed" : "Pending", lang),
                       style: TextStyle(
                         fontSize: 12,
                         color: task.status ? Colors.green : const Color(0xFFE91E63), 
@@ -95,14 +100,18 @@ class TaskItemCard extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: Text(
-                              "Created at ${task.deadline}",
+                              "${AppWords.tr('Created at ', lang)}${task.deadline}",
                               style: const TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           ),
                       ],
                     ),
                   ),
-                  const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFFE91E63)),
+                  Icon(
+                    lang == 'Arabic' ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
+                    size: 16, 
+                    color: const Color(0xFFE91E63)
+                  ),
                 ],
               ),
             ),
