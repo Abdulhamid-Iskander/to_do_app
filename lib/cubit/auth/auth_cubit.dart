@@ -37,8 +37,14 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
+    
+    final currentLanguage = state.language; 
+    
     await prefs.clear(); 
     await FirebaseAuth.instance.signOut();
-    emit(AuthState()); 
+    
+    await prefs.setString('language', currentLanguage);
+    
+    emit(AuthState(language: currentLanguage)); 
   }
 }

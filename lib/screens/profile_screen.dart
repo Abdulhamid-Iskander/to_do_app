@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/cubit/auth/auth_cubit.dart';
 import 'package:to_do_app/cubit/auth/auth_state.dart';
 import 'package:to_do_app/words/app_words.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -102,22 +103,26 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   item(
-                    title: state.name, 
+                    title: AppWords.tr(state.name, lang),
                     tap: () => edit(context, 'Name', lang),
+                    lang: lang,
                   ),
                   item(
-                    title: state.email, 
+                    title: AppWords.tr(state.email, lang),
                     tap: () => edit(context, 'Email', lang),
+                    lang: lang,
                   ),
                   item(
                     title: AppWords.tr('Change Password', lang),
                     tap: () {
                       Navigator.pushNamed(context, '/change-password');
                     },
+                    lang: lang,
                   ),
                   item(
-                    title: "${AppWords.tr('Language', lang)}: ${AppWords.tr(state.language, lang)}", 
+                    title: "${AppWords.tr('Language', lang)}: ${AppWords.tr(state.language, lang)}",
                     tap: () => langDialog(context, lang),
+                    lang: lang,
                   ),
                   const SizedBox(height: 10),
                   ListTile(
@@ -148,7 +153,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget item({required String title, required VoidCallback tap}) {
+  Widget item({required String title, required VoidCallback tap, required String lang}) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
       title: Text(
@@ -159,8 +164,8 @@ class ProfileScreen extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
       ),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
+      trailing: Icon(
+        lang == 'Arabic' ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
         size: 18,
         color: Colors.black87,
       ),
