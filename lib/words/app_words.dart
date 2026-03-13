@@ -51,6 +51,8 @@ class AppWords {
       'Completed': 'Completed',
       'Deadline': 'Deadline',
       'Image': 'Image',
+      'Dark Mode': 'Dark Mode',
+      'Choose Theme': 'Choose Theme',
     },
     'Arabic': {
       'Profile': 'الصفحة الشخصية',
@@ -103,6 +105,8 @@ class AppWords {
       'Completed': 'مكتمل',
       'Deadline': 'تاريخ الانتهاء',
       'Image': 'الصورة',
+      'Dark Mode': 'الوضع الليلي',
+      'Choose Theme': 'اختر اللون',
     }
   };
 

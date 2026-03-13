@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -15,6 +16,7 @@ class AuthCubit extends Cubit<AuthState> {
       email: prefs.getString('email') ?? 'Email',
       language: prefs.getString('language') ?? 'English',
       themeColor: prefs.getInt('themeColor') ?? 0xFFE91E63,
+      isDarkMode: prefs.getBool('isDarkMode') ?? false,
     ));
   }
 
@@ -42,17 +44,78 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(themeColor: newColor));
   }
 
+  Future<void> updateThemeMode(bool isDark) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkMode', isDark);
+    emit(state.copyWith(isDarkMode: isDark));
+  }
+
+  Future<void> loginUser(String email, String password) async {
+    emit(state.copyWith(isLoading: true, authError: null, isSuccess: false));
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
+      
+      emit(state.copyWith(isLoading: false, isSuccess: true));
+    } on FirebaseAuthException catch (e) {
+      String message = "An error occurred";
+      if (e.code == 'user-not-found') {
+        message = "No user found for that email.";
+      } else if (e.code == 'wrong-password') {
+        message = "Wrong password provided.";
+      }
+      emit(state.copyWith(isLoading: false, authError: message));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, authError: e.toString()));
+    }
+  }
+
+  Future<void> registerUser(String name, String email, String password) async {
+    emit(state.copyWith(isLoading: true, authError: null, isSuccess: false));
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
+
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+        'name': name.trim(),
+        'email': email.trim(),
+        'uID': userCredential.user!.uid,
+      });
+
+      await updateName(name.trim());
+      await updateEmail(email.trim());
+
+      emit(state.copyWith(isLoading: false, isSuccess: true));
+    } on FirebaseAuthException catch (e) {
+      emit(state.copyWith(isLoading: false, authError: e.message ?? "An error occurred"));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, authError: e.toString()));
+    }
+  }
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     final currentLanguage = state.language; 
     final currentColor = state.themeColor;
+    final currentMode = state.isDarkMode;
     
     await prefs.clear(); 
     await FirebaseAuth.instance.signOut();
     
     await prefs.setString('language', currentLanguage);
     await prefs.setInt('themeColor', currentColor);
+    await prefs.setBool('isDarkMode', currentMode);
     
-    emit(AuthState(language: currentLanguage, themeColor: currentColor)); 
+    emit(AuthState(
+      language: currentLanguage, 
+      themeColor: currentColor,
+      isDarkMode: currentMode,
+    )); 
   }
 }
