@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:to_do_app/task_cubit/task_cubit.dart';
+import 'package:to_do_app/cubit/task_cubit/task_cubit.dart';
 import 'package:to_do_app/widgets/custom_add_task_field.dart';
 
 class AddTaskView extends StatefulWidget {

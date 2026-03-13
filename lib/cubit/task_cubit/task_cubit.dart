@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/service/service.dart';
-import 'package:to_do_app/task_cubit/task_state.dart';
+import 'package:to_do_app/cubit/task_cubit/task_state.dart';
 
 class TasksCubit extends Cubit<TasksState> {
   final DataService _service = DataService();

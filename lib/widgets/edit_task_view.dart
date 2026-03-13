@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/widgets/custom_add_task_field.dart';
-import '../task_cubit/task_cubit.dart';
+import '../cubit/task_cubit/task_cubit.dart';
 import '../models/task_model.dart';
 
 class EditTaskDialog {

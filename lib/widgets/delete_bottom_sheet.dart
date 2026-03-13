@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../task_cubit/task_cubit.dart';
+import '../cubit/task_cubit/task_cubit.dart';
 
 class DeleteBottomSheet {
   static void show(BuildContext context, String taskId) {

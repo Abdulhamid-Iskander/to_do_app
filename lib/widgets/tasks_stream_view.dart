@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../task_cubit/task_cubit.dart';
-import '../task_cubit/task_state.dart';
+import '../cubit/task_cubit/task_cubit.dart';
+import '../cubit/task_cubit/task_state.dart';
 import 'task_item_card.dart';
 
 class TasksStreamView extends StatelessWidget {

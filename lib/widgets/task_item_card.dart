@@ -23,7 +23,7 @@ class TaskItemCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: const Color(0xFFE91E63).withOpacity(0.15), 
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -33,9 +33,9 @@ class TaskItemCard extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: const BorderRadius.only(
+              decoration: const BoxDecoration(
+                color: Color(0xFFE91E63), 
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25),
                 ),
@@ -44,20 +44,20 @@ class TaskItemCard extends StatelessWidget {
                 children: [
                   Text(
                     "#${index + 1}",
-                    style: const TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-                  Container(height: 15, width: 1, color: Colors.grey[300], margin: const EdgeInsets.symmetric(horizontal: 10)),
+                  Container(height: 15, width: 1, color: Colors.white54, margin: const EdgeInsets.symmetric(horizontal: 10)),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                     decoration: BoxDecoration(
-                      color: task.status ? Colors.grey[200] : const Color(0xFFFFEBF2),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       task.status ? "Completed" : "Pending",
                       style: TextStyle(
                         fontSize: 12,
-                        color: task.status ? Colors.grey[600] : const Color(0xFFE91E63),
+                        color: task.status ? Colors.green : const Color(0xFFE91E63), 
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -65,6 +65,7 @@ class TaskItemCard extends StatelessWidget {
                 ],
               ),
             ),
+            
             if (task.imageUrl != null && task.imageUrl!.isNotEmpty)
               Image.file(
                 File(task.imageUrl!),
@@ -72,6 +73,7 @@ class TaskItemCard extends StatelessWidget {
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
+              
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(
@@ -100,7 +102,7 @@ class TaskItemCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                  const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFFE91E63)),
                 ],
               ),
             ),
