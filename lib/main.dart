@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/cubit/task_cubit/task_cubit.dart';
-import 'package:to_do_app/firebase_options.dart';
 import 'package:to_do_app/screens/change_password_screen.dart';
 import 'package:to_do_app/screens/home_screen.dart';
 import 'package:to_do_app/screens/login_screen.dart';
 import 'package:to_do_app/screens/profile_screen.dart';
 import 'package:to_do_app/screens/signup_screen.dart';
 import 'cubit/auth/auth_cubit.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
