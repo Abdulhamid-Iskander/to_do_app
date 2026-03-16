@@ -92,74 +92,76 @@ class _EditTaskViewState extends State<EditTaskView> {
         padding: const EdgeInsets.all(25),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 60,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-              const SizedBox(height: 25),
-              CustomAddTaskField(controller: title, hintText: AppWords.tr("Title", lang)),
-              const SizedBox(height: 15),
-              CustomAddTaskField(controller: desc, hintText: AppWords.tr("Description", lang), maxLines: 5),
-              const SizedBox(height: 15),
-              GestureDetector(
-                onTap: () => select(context),
-                child: AbsorbPointer(
-                  child: CustomAddTaskField(
-                    controller: deadline,
-                    hintText: AppWords.tr("Deadline", lang),
-                    suffixIcon: Icons.calendar_today_outlined,
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 60,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15),
-              GestureDetector(
-                onTap: pick,
-                child: AbsorbPointer(
-                  child: CustomAddTaskField(
-                    controller: image,
-                    hintText: AppWords.tr("Image", lang),
-                    suffixIcon: Icons.image_outlined,
-                  ),
-                ),
-              ),
-              if (image.text.isNotEmpty) ...[
+                const SizedBox(height: 25),
+                CustomAddTaskField(controller: title, hintText: AppWords.tr("Title", lang)),
                 const SizedBox(height: 15),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: image.text.startsWith('http')
-                      ? Image.network(image.text, height: 150, width: double.infinity, fit: BoxFit.cover)
-                      : Image.file(File(image.text), height: 150, width: double.infinity, fit: BoxFit.cover),
+                CustomAddTaskField(controller: desc, hintText: AppWords.tr("Description", lang), maxLines: 5),
+                const SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () => select(context),
+                  child: AbsorbPointer(
+                    child: CustomAddTaskField(
+                      controller: deadline,
+                      hintText: AppWords.tr("Deadline", lang),
+                      suffixIcon: Icons.calendar_today_outlined,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                GestureDetector(
+                  onTap: pick,
+                  child: AbsorbPointer(
+                    child: CustomAddTaskField(
+                      controller: image,
+                      hintText: AppWords.tr("Image", lang),
+                      suffixIcon: Icons.image_outlined,
+                    ),
+                  ),
+                ),
+                if (image.text.isNotEmpty) ...[
+                  const SizedBox(height: 15),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: image.text.startsWith('http')
+                        ? Image.network(image.text, height: 150, width: double.infinity, fit: BoxFit.cover)
+                        : Image.file(File(image.text), height: 150, width: double.infinity, fit: BoxFit.cover),
+                  ),
+                ],
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
+                    onPressed: () {
+                      if (title.text.isNotEmpty) {
+                        context.read<TasksCubit>().editTask(
+                          widget.task.id, 
+                          title.text, 
+                          description: desc.text, 
+                          deadline: deadline.text,
+                          imageUrl: image.text, 
+                        );
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text(AppWords.tr("Save", lang), style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold)),
+                  ),
                 ),
               ],
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
-                  onPressed: () {
-                    if (title.text.isNotEmpty) {
-                      context.read<TasksCubit>().editTask(
-                        widget.task.id, 
-                        title.text, 
-                        description: desc.text, 
-                        deadline: deadline.text,
-                        imageUrl: image.text, 
-                      );
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text(AppWords.tr("Save", lang), style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold)),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
