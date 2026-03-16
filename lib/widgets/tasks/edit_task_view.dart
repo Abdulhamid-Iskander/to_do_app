@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -128,6 +129,15 @@ class _EditTaskViewState extends State<EditTaskView> {
                   ),
                 ),
               ),
+              if (image.text.isNotEmpty) ...[
+                const SizedBox(height: 15),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: image.text.startsWith('http')
+                      ? Image.network(image.text, height: 150, width: double.infinity, fit: BoxFit.cover)
+                      : Image.file(File(image.text), height: 150, width: double.infinity, fit: BoxFit.cover),
+                ),
+              ],
               const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
