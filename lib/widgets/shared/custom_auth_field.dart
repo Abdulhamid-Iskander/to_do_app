@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomAuthField extends StatelessWidget {
+class CustomAuthField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final bool isPassword;
@@ -13,15 +13,33 @@ class CustomAuthField extends StatelessWidget {
   });
 
   @override
+  State<CustomAuthField> createState() => _CustomAuthFieldState();
+}
+
+class _CustomAuthFieldState extends State<CustomAuthField> {
+  bool isObscure = true;
+
+  @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
 
     return TextField(
-      controller: controller,
-      obscureText: isPassword,
+      controller: widget.controller,
+      obscureText: widget.isPassword ? isObscure : false,
       decoration: InputDecoration(
-        labelText: label,
-        suffixIcon: isPassword ? const Icon(Icons.visibility_off) : null,
+        labelText: widget.label,
+        suffixIcon: widget.isPassword
+            ? IconButton(
+                icon: Icon(
+                  isObscure ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isObscure = !isObscure;
+                  });
+                },
+              )
+            : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
         ),
