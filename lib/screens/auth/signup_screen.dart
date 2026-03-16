@@ -58,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (state.authError != null) {
             showErrorDialog(AppWords.tr(state.authError!, lang), lang);
           } else if (state.isSuccess) {
-            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+            Navigator.popUntil(context, (route) => route.isFirst);
           }
         },
         builder: (context, state) {
