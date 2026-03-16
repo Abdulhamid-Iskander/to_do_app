@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state.authError != null) {
             showErrorDialog(AppWords.tr(state.authError!, lang), lang);
           } else if (state.isSuccess) {
-            Navigator.popUntil(context, (route) => route.isFirst);
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
           }
         },
         builder: (context, state) {

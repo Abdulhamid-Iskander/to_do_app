@@ -59,13 +59,20 @@ class AuthCubit extends Cubit<AuthState> {
         password: password.trim(),
       );
       
-      final doc = await FirebaseFirestore.instance.collection('users').doc(cred.user!.uid).get();
-      if (doc.exists) {
-        await updateName(doc.data()?['name'] ?? 'User Name');
-      }
       await updateEmail(email.trim());
       
       emit(state.copyWith(isLoading: false, isSuccess: true));
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(cred.user!.uid)
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          updateName(doc.data()?['name'] ?? 'User Name');
+        }
+      }).catchError((_) {});
+
     } on FirebaseAuthException catch (e) {
       String message = "An error occurred";
       if (e.code == 'user-not-found') {
@@ -88,16 +95,20 @@ class AuthCubit extends Cubit<AuthState> {
         password: password.trim(),
       );
 
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-        'name': name.trim(),
-        'email': email.trim(),
-        'uID': userCredential.user!.uid,
-      });
-
       await updateName(name.trim());
       await updateEmail(email.trim());
 
       emit(state.copyWith(isLoading: false, isSuccess: true));
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'name': name.trim(),
+        'email': email.trim(),
+        'uID': userCredential.user!.uid,
+      }).catchError((_) {});
+
     } on FirebaseAuthException catch (e) {
       emit(state.copyWith(isLoading: false, authError: e.message ?? "An error occurred"));
     } catch (e) {
@@ -124,6 +135,7 @@ class AuthCubit extends Cubit<AuthState> {
       isDarkMode: currentMode,
     )); 
   }
+
   Future<void> changeUserPassword(String currentPassword, String newPassword) async {
     emit(state.copyWith(isLoading: true, authError: null, isSuccess: false));
     try {
