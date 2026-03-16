@@ -16,11 +16,35 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final currentPassword = TextEditingController();
   final newPassword = TextEditingController();
 
+  void showCustomDialog(String title, String message, String lang, Color titleColor, bool isSuccess) {
+    showDialog(
+      context: context,
+      barrierDismissible: !isSuccess,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(AppWords.tr(title, lang), style: TextStyle(color: titleColor)),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              if (isSuccess) {
+                Navigator.pop(context);
+              }
+            },
+            child: Text(
+              AppWords.tr(isSuccess ? "OK" : "Cancel", lang),
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void updatePasswordAction(String lang) {
     if (currentPassword.text.isEmpty || newPassword.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppWords.tr('Please fill all fields', lang))),
-      );
+      showCustomDialog("Error", AppWords.tr('Please fill all fields', lang), lang, Colors.red, false);
       return;
     }
     context.read<AuthCubit>().changeUserPassword(currentPassword.text, newPassword.text);
@@ -50,14 +74,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         listener: (context, state) {
           final lang = state.language;
           if (state.authError != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(AppWords.tr(state.authError!, lang), style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red),
-            );
+            showCustomDialog("Error", AppWords.tr(state.authError!, lang), lang, Colors.red, false);
           } else if (state.isSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(AppWords.tr('Password updated successfully!', lang)), backgroundColor: Colors.green),
-            );
-            Navigator.pop(context);
+            showCustomDialog("Success", AppWords.tr('Password updated successfully!', lang), lang, Colors.green, true);
           }
         },
         builder: (context, state) {
